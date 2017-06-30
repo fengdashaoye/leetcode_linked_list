@@ -1,0 +1,69 @@
+Given a sorted linked list, delete all duplicates such that each element appear only once.
+
+For example,
+Given 1->1->2, return 1->2.
+Given 1->1->2->3->3, return 1->2->3.
+思路:挺简单的一道题，用hashmap来实现，注意边界条件即可，哦，忘了是sorted list.
+代码:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        HashMap<Integer,Integer> hashmap = new HashMap<Integer,Integer>();
+        hashmap.put(head.val, 1);
+        ListNode result = head;
+        ListNode second = head.next;
+        while(second != null){
+            if(hashmap.containsKey(second.val)){
+                head.next = second.next;
+                second = second.next;
+            }else{
+                hashmap.put(second.val,1);
+                head = second;
+                second = second.next;
+                
+            }
+        }
+        return result;
+        
+    }
+}
+忘了是sorted list
+这样就行
+代码:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode list = head;
+         
+         while(list != null) {
+        	 if (list.next == null) {
+        		 break;
+        	 }
+        	 if (list.val == list.next.val) {
+        		 list.next = list.next.next;
+        	 } else {
+        		 list = list.next;
+        	 }
+         }
+         
+         return head;
+    }
+}
+
