@@ -1,0 +1,46 @@
+Given a linked list, determine if it has a cycle in it.
+
+Follow up:
+Can you solve it without using extra space?
+思路:因为不要用到额外的空间，所以hashmap就不能用了，我们首先判断如果head为null或者只有1个点，那么就是无环的。所以必定有两个点，我们让second=head
+然后以两个点不为null为条件看循环，然后second一次跑两步,head一次跑一步，如果存在环路，那么两点一定会相遇，如果不存在环路，则会跳出循环。注意的是
+为了避免[1,2]之类的情况，second跳两步有一个判别
+代码:
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        //不用额外的空间
+        if(head == null || head.next == null){//没有点或者只有一个点
+            return false;
+        }
+        ListNode second = head.next;
+        while(head != null && second != null){
+            if(head == second){
+                return true;
+            }
+            head = head.next;
+            second = second.next;
+            if(second != null){
+                second = second.next;
+            }
+        }
+        return false;
+        
+        
+    }
+}
+我看了一下，嗯高分的答案和我的思路差不多
+
+
+
+
