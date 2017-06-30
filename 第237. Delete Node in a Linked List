@@ -1,0 +1,22 @@
+Write a function to delete a node (except the tail) in a singly linked list, given only access to that node.
+
+Supposed the linked list is 1 -> 2 -> 3 -> 4 and you are given the third node with value 3, 
+the linked list should become 1 -> 2 -> 4 after calling your function.
+//一开始我还很疑惑为什么函数的参数只给了两个，后来我仔细看了下题发现只允许访问这个点，且此点不是尾点,别人的代码，嗯，有点巧妙
+代码:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void deleteNode(ListNode node) {
+        //只允许访问这个点
+        node.val = node.next.val;
+        node.next = node.next.next;
+        
+    }
+}
