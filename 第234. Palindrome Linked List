@@ -1,0 +1,99 @@
+Given a singly linked list, determine if it is a palindrome.
+
+Follow up:
+Could you do it in O(n) time and O(1) space?
+一开始的想法，最简单的思路，把节点存起来，但是空间复杂度为O(n)
+代码:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isPalindrome(ListNode head) {
+        if(head == null || head.next == null){
+            return true;
+        }
+        ArrayList<ListNode> list = new ArrayList<ListNode>();
+        ListNode first = head;
+        while(first != null){
+            list.add(first);
+            first = first.next;
+        }
+        int begin = 0;
+        int end = list.size()-1;
+        while(end > begin){
+            if(list.get(begin).val != list.get(end).val){
+                return false;
+            }
+            begin++;
+            end--;
+        }
+        return true;
+    }
+   
+}
+别人的思路:先找到中点，把后半段反转，然后同时遍历，看值是否相等
+This can be solved by reversing the 2nd half and compare the two halves. Let's start with an example [1, 1, 2, 1].
+
+In the beginning, set two pointers fast and slow starting at the head.
+
+1 -> 1 -> 2 -> 1 -> null 
+sf
+(1) Move: fast pointer goes to the end, and slow goes to the middle.
+
+1 -> 1 -> 2 -> 1 -> null 
+          s          f
+(2) Reverse: the right half is reversed, and slow pointer becomes the 2nd head.
+
+1 -> 1    null <- 2 <- 1           
+h                      s
+(3) Compare: run the two pointers head and slow together and compare.
+
+1 -> 1    null <- 2 <- 1             
+     h            s
+代码:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isPalindrome(ListNode head) {
+        ListNode fast = head, slow = head;
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        if(fast != null){
+            slow = slow.next;
+        }
+        slow = reverse(slow);//slow为从末尾开始
+        fast = head;//fast赋值后从头开始
+        while(slow != null){
+            if(slow.val != fast.val){
+                return false;
+            }
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return true;
+    }
+    public ListNode reverse(ListNode slow){
+        ListNode pre = null;
+        while(slow != null){
+            ListNode next = slow.next;
+            slow.next = pre;
+            pre = slow;
+            slow = next;
+        }
+        return pre;
+    }
+}
+
