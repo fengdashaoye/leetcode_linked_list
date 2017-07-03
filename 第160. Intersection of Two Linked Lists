@@ -1,0 +1,106 @@
+Write a program to find the node at which the intersection of two singly linked lists begins.
+
+
+For example, the following two linked lists:
+A:          a1 → a2
+                   ↘
+                     c1 → c2 → c3
+                   ↗            
+B:     b1 → b2 → b3
+Notes:
+
+If the two linked lists have no intersection at all, return null.
+The linked lists must retain their original structure after the function returns.
+You may assume there are no cycles anywhere in the entire linked structure.
+Your code should preferably run in O(n) time and use only O(1) memory.
+思路:第一想法，先比较两条链表的长度，然后长的先跑，在长链表剩下的长度与短链表长度一致时，短链表也开始跑。二者同时，如果有交汇则返回
+如果没有则return null
+代码:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA == null || headB == null){
+            return null;
+        }
+        ListNode first = headA;
+        ListNode second = headB;
+        int length_first = 0, length_second = 0;
+        while(first != null){
+            length_first++;
+            first = first.next;
+        }
+        while(second != null){
+            length_second++;
+            second = second.next;
+        }
+        if(length_first > length_second){
+            for(int i = 0; i < length_first-length_second; i++){
+                headA = headA.next;
+            }
+            while(headA != null && headB != null){
+                if(headA == headB){
+                    return headA;
+                }
+                headA = headA.next;
+                headB = headB.next;
+            }   
+        }else if(length_first < length_second){
+            for(int i = 0; i < length_second-length_first; i++){
+                headB = headB.next;
+            }
+            while(headA != null && headB != null){
+                if(headA == headB){
+                    return headB;
+                }
+                headA = headA.next;
+                headB = headB.next;
+            }
+        }else{
+            while(headA != null && headB != null){
+                if(headA == headB){
+                    return headB;
+                }
+                headA = headA.next;
+                headB = headB.next;
+            }
+        }
+        return null;
+    }
+}
+
+这是别人的代码，很巧妙，初始时a为headA,b为headB，如果长度相同且存在交点，自然返回a，如果不存在交点，等全部遍历完,a自然为null。
+如果一条长，一条短，且存在交点
+例如:
+A:          a1 → a2
+                   ↘
+                     c1 → c2 → c3
+                   ↗            
+B:     b1 → b2 → b3
+当a到达c3时，重新赋予其headB的头，此时b到达c1，
+
+public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    //boundary check
+    if(headA == null || headB == null) return null;
+    
+    ListNode a = headA;
+    ListNode b = headB;
+    
+    //if a & b have different len, then we will stop the loop after second iteration
+    while( a != b){
+    	//for the end of first iteration, we just reset the pointer to the head of another linkedlist
+        a = a == null? headB : a.next;
+        b = b == null? headA : b.next;    
+    }
+    
+    return a;
+}
