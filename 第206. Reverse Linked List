@@ -1,0 +1,45 @@
+Reverse a singly linked list.
+
+click to show more hints.
+
+Hint:
+A linked list can be reversed either iteratively or recursively. Could you implement both?
+思路：这道题挺简单的，只需要按顺序在头部反转之前，保存头部.next就行，需要注意的是边界问题，只有原先head.next才赋予null。
+代码:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode reverseList(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode first = head, second = head.next;
+        if(second.next == null){//长度为2
+            first.next = null;
+            second.next = first;
+            return second;
+        }
+        ListNode third = second.next;
+        while(third != null){
+            if(first == head){//初始.next才为null
+                first.next = null;
+            }
+            second.next = first;
+            ListNode fourth = third.next;
+            third.next = second;
+            
+            first = second;
+            second = third;
+            third = fourth;
+        }
+        return second;
+        
+    }
+}
+
