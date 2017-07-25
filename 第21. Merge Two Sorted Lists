@@ -1,0 +1,144 @@
+
+Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.
+
+思路:一开始以为这两个链表有可能是升序，降序，后来才发现都是升序，所以先建一个空指针，然后再往后连是最好的，但是不知道为什么后一种方法会超时,经过修改
+可以了，而且时间更快。
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1 == null){
+            return l2;
+        }
+        if(l2 == null){
+            return l1;
+        }
+        ListNode node = new ListNode(-1);
+        ListNode head = node;
+        while(l1 != null && l2 != null){
+            if(l1.val <= l2.val){
+                node.next = l1;
+                l1 = l1.next;
+            }else{
+                node.next = l2;
+                l2 = l2.next;
+            }
+            node = node.next;
+        }
+        if(l1 == null){
+            node.next = l2;
+        }
+        if(l2 == null){
+            node.next = l1;
+        }
+        
+        
+        return head.next;
+        
+        
+    }
+}
+开始的想法:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1 == null){
+            return l2;
+        }
+        if(l2 == null){
+            return l1;
+        }
+        ListNode first = l1.val >= l2.val ? l1 : l2;
+        ListNode second = l1.val < l2.val ? l2 : l1;
+        ListNode head = second;
+        while(first != null || second != null){
+            ListNode node = second.next;
+            if(node != null){
+                if(node.val <= first.val){
+                    second = node;
+                    node = second.next;
+                }else{
+                    second.next = first;
+                    ListNode pre = first;
+                    while(first != null && first.val < node.val){
+                        pre = first;
+                        first = first.next;
+                    }
+                    pre.next = node;
+                    second = node;
+                }
+            }else{
+                second.next = first;
+                break;
+            }
+        }
+        return head;
+        
+        
+    }
+}
+经过修改可以了:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1 == null){
+            return l2;
+        }
+        if(l2 == null){
+            return l1;
+        }
+        ListNode first = l1.val >= l2.val ? l1 : l2;
+        ListNode second = l1.val < l2.val ? l1 : l2;
+        ListNode head = second;
+        while(first != null && second != null){
+            ListNode node = second.next;
+            if(node != null){
+                if(node.val <= first.val){
+                    second = node;
+                    node = second.next;
+                }else{
+                    second.next = first;
+                    ListNode pre = first;
+                    while(first != null && first.val < node.val){
+                        pre = first;
+                        first = first.next;
+                    }
+                    pre.next = node;
+                    second = node;
+                }
+            }else{
+                second.next = first;
+                break;
+            }
+        }
+        return head;
+        
+        
+    }
+}
+
+
+
+
+
+
