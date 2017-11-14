@@ -3,10 +3,11 @@ Given a sorted linked list, delete all nodes that have duplicate numbers, leavin
 For example,
 Given 1->2->3->3->4->4->5, return 1->2->5.
 Given 1->1->1->2->3, return 2->3.
-这道题其实很简单，如果想要O(n)的话就需要前期处理
+这道题其实很简单，如果想要只循环一边的话就需要前期处理
 前期处理后使得pre->before->start,确保pre.val != before.val
 经常碰到1,1,1,2,2,3.如果前期每处理好，前期处理后得到2->2->3，这样判断时仅判断before.val和start.val，就会忽略pre，如此得到2->3
 所以前期处理一定要得到pre->before->start，其中pre.val != before.val。
+最终时间复杂度为O(n)，且只循环一遍，感觉棒棒哒
 代码：
 /**
  * Definition for singly-linked list.
