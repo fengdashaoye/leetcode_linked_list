@@ -1,0 +1,90 @@
+Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+
+For example,
+Given 1->2->3->3->4->4->5, return 1->2->5.
+Given 1->1->1->2->3, return 2->3.
+这道题其实很简单，如果想要O(n)的话就需要前期处理
+前期处理后使得pre->before->start,确保pre.val != before.val
+经常碰到1,1,1,2,2,3.如果前期每处理好，前期处理后得到2->2->3，这样判断时仅判断before.val和start.val，就会忽略pre，如此得到2->3
+所以前期处理一定要得到pre->before->start，其中pre.val != before.val。
+代码：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode start = head.next;
+        ListNode pre = head;
+        int panduan = 0;
+        if(pre.val == start.val){//这番处理使得pre.val != start.val
+            while(start != null){
+                if(start.val != pre.val){
+                    pre = start;//避免1,1,1,2,2,3这类
+                    start = start.next;
+                    if(start == null){
+                        return pre;//1,1,1,2就直接返回2这个点
+                    }else{
+                        if(pre.val != start.val){//避免1,1,1,2,2,3这类
+                            break;
+                        }
+                    }
+                }else{
+                    start = start.next;
+                }
+            }
+            if(start == null){//全局都与开头的值相等
+                return null;
+            }
+            //上面这番处理后使得pre.val != start.val
+            head = pre;//处理后的开头要变化
+        }
+        if(start == null){
+            return pre;
+        }
+        
+        ListNode before = start;
+        start = start.next;
+        
+        int number = pre.val;//仅为了初始化
+        while(start != null){
+            if(before.val == number){//避免1,2,2,2,3
+                pre.next = start;
+                before = start;
+                if(before == null){
+                    break;
+                }
+                start = start.next;
+                continue;
+            }
+            if(start.val == before.val){//这个时候pre就不往后移动了
+                pre.next = start.next;
+                before = start.next;
+                number = start.val;
+                if(before == null){
+                    break;
+                }
+                start = before.next;
+            }else{
+                pre = before;
+                before = start;
+                start = start.next;
+            }
+        }
+        if(before != null && before.val == number){//避免1,2,2,2这类
+            pre.next = before.next;
+        }
+        if(before != null && before.val == head.val){//避免1,1,2,2这类
+            return null;
+        }
+        return head;
+        
+    }
+}
