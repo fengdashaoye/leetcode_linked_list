@@ -1,0 +1,113 @@
+Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+
+You should preserve the original relative order of the nodes in each of the two partitions.
+
+For example,
+Given 1->4->3->2->5->2 and x = 3,
+return 1->2->2->4->3->5.
+
+这道题的思路是首先找到第一个大于等于x的点(假设该点叫做i)，然后将该点往后小于x的点移到i点的前面。
+这道题我的思路比较笨，首先分成两类情况，第一类就是开始的头结点就是i点，否则为第二类。分成两类的原因为第一类的话头结点就需要自己创建了。
+然后遍历i点后面的点，按顺序在list存储小于x的点的值。然后依次创建list中的值的点，插入。再然后把i点之后list中的值的点删除就ac了。但是速度
+比较慢。
+
+代码：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode partition(ListNode head, int x) {
+        if(head == null){
+            return head;
+        }
+        ListNode first = head;
+        ArrayList<Integer> small = new ArrayList<Integer>();
+        if(first.val >= x){//第一个大于x的位置在开头
+            ListNode middle = head;
+            while(first != null){
+                if(first.val < x){
+                    small.add(first.val);
+                }
+                first = first.next;
+            }
+            if(small.size() > 0){
+                ListNode start = new ListNode(small.get(0));
+                ListNode result = start;
+                start.next = middle;
+                for(int i = 1; i < small.size(); i++){
+                    ListNode second = new ListNode(small.get(i));
+                    start.next = second;
+                    second.next = middle;
+                    start = start.next;//往后沿
+                }
+                ListNode before = middle;
+                while(middle != null && small.size() > 0){
+                    if(middle.val == small.get(0)){//因为找到后会把开头的删掉
+                        before.next = middle.next;//想想2->3->4，要除掉3变成2->4,3为middle,2为before,当出掉3后，before是不变的，
+                        small.remove(0);
+                    }else{
+                        before = middle;//2->3->4，如果不除掉，在middle完后移时,before要及时更新
+                    }
+                    middle = middle.next;
+                }
+                return result;
+            }else{
+                return head;
+            }
+        }else{
+            ListNode start = first.next;
+            ListNode pre = first;
+            while(start != null){//找到第一个大于等于x的点
+                if(start.val >= x){
+                    break;//停止
+                }
+                pre = start;
+                start = start.next;
+            }
+            ListNode jiezhi = start;
+            while(jiezhi != null){//从第一个大于x的位置开始往后找小于x的值
+                if(jiezhi.val < x){
+                    small.add(jiezhi.val);//small的位置顺序对于后面删除有用
+                }
+                jiezhi = jiezhi.next;
+            }
+            
+        
+            if(small.size() > 0){
+                ListNode middle = new ListNode(small.get(0));
+                pre.next = middle;
+                middle.next = start;
+                pre = middle;
+                for(int i = 1; i < small.size(); i++){//插入前面
+                    middle = new ListNode(small.get(i));
+                    pre.next = middle;
+                    middle.next = start;
+                    pre = middle;
+                }
+                pre = start;
+                start = start.next;
+                while(start != null && small.size() > 0){
+                    if(start.val == small.get(0)){
+                        pre.next = start.next;
+                        small.remove(0);//这里是有顺序的
+                    }else{
+                        pre = start;
+                    }
+                    start = start.next;
+                }
+            }else{
+                return head;
+            }
+            
+        }
+        return head;
+        
+        
+        
+    }
+}
