@@ -1,0 +1,80 @@
+Reverse a linked list from position m to n. Do it in-place and in one-pass.
+
+For example:
+Given 1->2->3->4->5->NULL, m = 2 and n = 4,
+
+return 1->4->3->2->5->NULL.
+
+Note:
+Given m, n satisfy the following condition:
+1 ≤ m ≤ n ≤ length of list.
+
+ 思路：其实就是链表反转，只不过不是全部反转，部分反转，那么就是边界问题了。首先分成2类，是从头开始还是从中间开始。
+ 其次，我们还需要考虑反转的末尾，是反转到最后一个点，没事没有，这需要分别处理。
+
+代码：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if(head == null || head.next == null || m == n){
+            return head;
+        }
+        ListNode pre = head;
+        ListNode first = head;
+        ListNode second = null;
+        ListNode third = null;
+        if(m == 1){
+            second = first.next;
+            for(int i = 1; i < n; i++){//因为是小于，不是小于等于
+                third = second.next;
+                second.next = first;
+                first = second;
+                second = third;
+            }
+            head.next = second;
+            return first;
+        }else{
+            for(int i = 1; i < m; i++){
+                pre = first;
+                first = first.next;
+            }
+            second = first.next;
+            ListNode baocun = first;
+            System.out.println(first.val + " " + second.val);
+            int panduan = 0;
+            for(int i = m; i < n; i++){
+                if(second.next != null){
+                    third = second.next;
+                    second.next = first;
+                    first = second;
+                    second = third;
+                }else{
+                    second.next = first;
+                    third = null;
+                    panduan = 1;
+                    break;
+                }
+                
+            }
+            if(panduan == 1){
+                pre.next = second;
+            }else{
+                pre.next = first;
+            }
+            baocun.next = third;
+            
+        }
+        
+        return head;
+        
+        
+        
+    }
+}
