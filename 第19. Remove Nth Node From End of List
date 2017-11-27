@@ -1,0 +1,64 @@
+Given a linked list, remove the nth node from the end of list and return its head.
+
+For example,
+
+   Given linked list: 1->2->3->4->5, and n = 2.
+
+   After removing the second node from the end, the linked list becomes 1->2->3->5.
+Note:
+Given n will always be valid.
+Try to do this in one pass.
+
+思路：其实这道题之前就做过了，一下子有点忘了。定义两个坐标，一个slow，一个fast，fast先跑n+1个坐标后,slow和fast同时跑，当fast为null时
+slow.next就是要删除的那个节点了。
+但是这种题需要注意边界，如对于[1],n=1时就需要边界。最好自己定义一个节点，以其作为头结点，返回头结点.next，这样就算删除第一个节点返回的也是
+头结点.next。
+至于上面的fast跑多少后slow开始跑，在纸上演算以下就好了。
+
+代码：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if(head == null){
+            return head;
+        }
+        //最好不要直接从head开始，会引发很多边界问题，可以先自己创建一个节点，以其为开端，因为这样就算删掉了原先的head，只要返回开端.next即可
+        ListNode first = new ListNode(0);
+        first.next = head;
+        ListNode slow = head;
+        ListNode fast = head;
+        if(head.next == null){
+            if(n >= 0){
+                first.next = head.next;
+            }
+            return first.next;
+        }
+        int panduan = 0;
+        for(int i = 0; i <= n; i++){
+            if(fast == null){
+                panduan = 1;
+                break;
+            }
+            fast = fast.next;
+        }
+        if(panduan == 1){
+            first.next = first.next.next;
+            return first.next;
+        }
+        
+        while(fast != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return first.next;
+        
+    }
+}
