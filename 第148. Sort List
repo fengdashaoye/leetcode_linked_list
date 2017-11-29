@@ -1,0 +1,90 @@
+Sort a linked list in O(n log n) time using constant space complexity.
+
+比较笨的方法
+代码：
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode sortList(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        while(head != null){
+            result.add(head.val);
+            head = head.next;
+        }
+        //int[] content = (int[])result.toArray();
+        /*int[] content = new int[result.size()];
+        for(int i = 0; i < result.size(); i++){
+            content[i] = result.get(i);
+        }*/
+        Integer[] content = result.toArray(new Integer[result.size()]);
+        //注意，不能int[] content = result.toArray(new int[result.size()]);,这样编译不过。
+        Arrays.sort(content);
+        ListNode first = new ListNode(content[0]);
+        head = first;
+        for(int i = 1; i < content.length; i++){
+            ListNode second = new ListNode(content[i]);
+            first.next = second;
+            first = second;
+        }
+        return head;
+    }
+}
+
+
+这是别人的方法：
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode f = head.next.next;
+        ListNode p = head;
+        while (f != null && f.next != null) {
+            p = p.next;
+            f =  f.next.next;
+        }
+        ListNode h2 = sortList(p.next);
+        p.next = null;
+        return merge(sortList(head), h2);
+    }
+    public ListNode merge(ListNode h1, ListNode h2) {
+        ListNode hn = new ListNode(Integer.MIN_VALUE);
+        ListNode c = hn;
+        while (h1 != null && h2 != null) {
+            if (h1.val < h2.val) {
+                c.next = h1;
+                h1 = h1.next;
+            }
+            else {
+                c.next = h2;
+                h2 = h2.next;
+            }
+            c = c.next;
+        }
+        if (h1 != null)
+            c.next = h1;
+        if (h2 != null)
+            c.next = h2;
+        return hn.next;
+    }
+}
+
