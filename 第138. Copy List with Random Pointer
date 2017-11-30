@@ -1,0 +1,45 @@
+A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
+
+Return a deep copy of the list.
+
+一开始没太看懂题，后来看懂了，有这么一条链表，每个节点不仅有.next指向下一个节点，有.random指向任意节点或者null。需要重新建立一条链表，对
+原链表进行复制，包括节点之间的关系。
+
+思路：这道题在剑指offer中见到过，主要是对于.random这个关系，我们先依据原链表建立一条新的链表，新的链表中仅包含.next关系，在建立过程中
+利用hashmap建立点有点对应关系。建立完新链表后，需要建立新链表的.random关系。
+不断往后遍历，新链表对原链表的节点顺序一一对应，在设置.random关系时，利用原链表的节点得到原链表节点的.random，再用content.get(原链表节
+点的.random)得到相应的新链表节点的.random，设定关系即可。
+
+代码:
+/**
+ * Definition for singly-linked list with a random pointer.
+ * class RandomListNode {
+ *     int label;
+ *     RandomListNode next, random;
+ *     RandomListNode(int x) { this.label = x; }
+ * };
+ */
+public class Solution {
+    public RandomListNode copyRandomList(RandomListNode head) {
+        RandomListNode first = new RandomListNode(0);//first.next才是返回的点。
+        RandomListNode result = first;
+        RandomListNode start = head;
+        HashMap<RandomListNode, RandomListNode> content = new HashMap<RandomListNode, RandomListNode>();
+        while(start != null){
+            RandomListNode node = new RandomListNode(start.label);
+            content.put(start, node);
+            first.next = node;
+            start = start.next;
+            first = first.next;
+        }
+        
+        first = result.next;
+        while(first != null){
+            first.random = content.get(head.random);
+            head = head.next;
+            first = first.next;
+        }
+        return result.next;
+        
+    }
+}
